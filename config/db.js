@@ -5,10 +5,9 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     // Conectandonos a la DB con mongoose
-    const connection = await mongoose.connect(
-      "mongodb+srv://root:admin123@cluster0.tmlpd.mongodb.net/moviesdb?retryWrites=true&w=majority",
-      { useNewUrlParser: true }
-    );
+    const connection = await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+    });
 
     // Almacenando la info de la conexion de la DB
     const url = `${connection.connection.host}:${connection.connection.port}`;
