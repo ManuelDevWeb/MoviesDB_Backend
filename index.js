@@ -3,6 +3,9 @@ import express from "express";
 // Importando dotenv
 import dotenv from "dotenv";
 
+// Importando routes de Usuario
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+
 // Importando funcion para conextarnos a la DB
 import { connectDB } from "./config/db.js";
 
@@ -17,6 +20,9 @@ dotenv.config();
 
 // Llamando a la funcion connectDB
 connectDB();
+
+// Routing
+app.use("/api/usuarios", usuarioRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
