@@ -115,10 +115,53 @@ const confirmarUsuario = async (req, res) => {
 };
 
 // Función para recuperar contraseña (Genera un nuevo Token)
-const recuperarPasswordUsuario = async (req, res) => {};
+const recuperarPasswordUsuario = async (req, res) => {
+  // Obteniendo el email del usuario
+  const { email } = req.body;
+
+  // Verificando si el usuario existe en la DB
+  const usuario = await Usuario.findOne({ email });
+
+  // Si no existe el usuario retorna un error 400
+  if (!usuario) {
+    const error = new Error("Usuario no encontrado 😔");
+    return res.status(400).json({
+      msg: error.message,
+    });
+  }
+
+  try {
+    // Asignar valor token al usuario aleatorio, con la funcion generarId()
+    usuario.token = generarId();
+    // Actualizamos el usuario en la DB
+    await usuario.save();
+
+    res.json({
+      msg: "Se ha enviado un email con el link para recuperar la contraseña 😉",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // Función para validar token (Verifica si corresponde a un usuario)
-const validarTokenUsuario = async (req, res) => {};
+const validarTokenUsuario = async (req, res) => {
+  // Obteniendo el token del usuario
+  const { token } = req.params;
+
+  // Verificando si el usuario existe en la DB
+  const tokenValido = await Usuario.findOne({ token });
+
+  // Si no existe el usuario retorna un error 400
+  if (tokenValido) {
+    res.json({ msg: "Token valido" });
+  } else {
+    const error = new Error("Token no valido");
+    return res.status(400).json({
+      msg: error.message,
+    });
+  }
+};
 
 // Función para actualizar contraseña (Verifica si corresponde a un usuario y actualiza la contraseña)
 const nuevaPasswordUsuario = async (req, res) => {};
