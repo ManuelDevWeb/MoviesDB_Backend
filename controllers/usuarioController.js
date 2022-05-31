@@ -198,7 +198,12 @@ const nuevaPasswordUsuario = async (req, res) => {
 };
 
 // Función para obtener el perfil del usuario
-const perfilUsuario = async (req, res) => {};
+const perfilUsuario = async (req, res) => {
+  // Obteniendo la informacion del usuario almacenada en la req, a traves del middleware checkAuth()
+  const { usuario } = req;
+
+  res.json(usuario);
+};
 
 export {
   registrarUsuario,

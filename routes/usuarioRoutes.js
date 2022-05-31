@@ -11,8 +11,8 @@ import {
   nuevaPasswordUsuario,
   perfilUsuario,
 } from "../controllers/usuarioController.js";
-
 // Importando middleware para verificar que el usuario este autenticado
+import { checkAuth } from "../middlewares/checkAuth.js";
 
 // Instanciando router de express
 const router = express.Router();
@@ -38,6 +38,6 @@ router
   .post(nuevaPasswordUsuario);
 
 // Obtener el perfil del usuario, solo si esta autenticado (Middleware)
-router.get("/perfil", perfilUsuario);
+router.get("/perfil", checkAuth, perfilUsuario);
 
 export default router;
