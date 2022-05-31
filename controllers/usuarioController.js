@@ -164,7 +164,38 @@ const validarTokenUsuario = async (req, res) => {
 };
 
 // Función para actualizar contraseña (Verifica si corresponde a un usuario y actualiza la contraseña)
-const nuevaPasswordUsuario = async (req, res) => {};
+const nuevaPasswordUsuario = async (req, res) => {
+  // Obteniendo el token del usuario
+  const { token } = req.params;
+  // Obteniendo la nueva contraseña
+  const { password } = req.body;
+
+  // Verificando si el usuario existe en la DB
+  const usuario = await Usuario.findOne({ token });
+
+  // Si no existe el usuario retorna un error 400
+  if (!usuario) {
+    const error = new Error("Usuario no encontrado 😔");
+    return res.status(400).json({
+      msg: error.message,
+    });
+  }
+
+  try {
+    // Asignamos la nueva contraseña al usuario
+    usuario.password = password;
+    // El token es de un solo uso, por ende asignamos el valor a vacio
+    usuario.token = "";
+    // Actualizamos el usuario en la DB
+    await usuario.save();
+
+    res.json({
+      msg: "Contraseña actualizada correctamente, ya puedes iniciar sesión 😉",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // Función para obtener el perfil del usuario
 const perfilUsuario = async (req, res) => {};
