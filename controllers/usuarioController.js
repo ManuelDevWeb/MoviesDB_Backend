@@ -83,7 +83,36 @@ const autenticarUsuario = async (req, res) => {
 };
 
 // Función para confirmar un usuario
-const confirmarUsuario = async (req, res) => {};
+const confirmarUsuario = async (req, res) => {
+  // Obteniendo el token del usuario (Generado al momento de registrarse)
+  const { token } = req.params;
+
+  // Verificando si el usuario existe en la DB
+  const usuario = await Usuario.findOne({ token });
+
+  // Si no existe el usuario retorna un error 400
+  if (!usuario) {
+    const error = new Error("Usuario no encontrado 😔");
+    return res.status(400).json({
+      msg: error.message,
+    });
+  }
+
+  try {
+    // Asignamos el valor confirmado a true
+    usuario.confirmado = true;
+    // El token es de un solo uso, por ende asignamos el valor a vacio
+    usuario.token = "";
+    // Actualizamos el usuario en la DB
+    await usuario.save();
+
+    res.json({
+      ms: "Usuario confirmado correctamente, ya puedes iniciar sesión 😉",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // Función para recuperar contraseña (Genera un nuevo Token)
 const recuperarPasswordUsuario = async (req, res) => {};
