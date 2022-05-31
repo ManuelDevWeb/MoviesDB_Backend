@@ -63,6 +63,15 @@ usuarioSchema.pre("save", async function (next) {
   next();
 });
 
+// Funcion para comparar contraseñas
+usuarioSchema.methods.comprobarPassword = async function (passwordFormulario) {
+  // Hacemos referencia al objeto instanciado
+  const usuario = this;
+
+  // Comparamos la contraseña del usuario con la que viene del formulario
+  return await bcrypt.compare(passwordFormulario, usuario.password);
+};
+
 // Definiendo el modelo (Nombre para identificar Modelo y Schema)
 const Usuario = mongoose.model("Ususario", usuarioSchema);
 
