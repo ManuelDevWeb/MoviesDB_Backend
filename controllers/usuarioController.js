@@ -4,6 +4,8 @@ import { Usuario } from "../models/Usuario.js";
 import { generarId } from "../helpers/generarId.js";
 // Importando funcion que genera un JWT
 import { generarJWT } from "../helpers/generarJWT.js";
+// Importando funciones para enviar los emails
+import { emailRegistro, emailRecuperarContraseña } from "../helpers/emails.js";
 
 // Función para crear un nuevo usuario
 const registrarUsuario = async (req, res) => {
@@ -28,6 +30,12 @@ const registrarUsuario = async (req, res) => {
     usuario.token = generarId();
     // Guardar usuario en la DB
     await usuario.save();
+    // Enviamos datos a la funcion que genera el email de confirmacion
+    emailRegistro({
+      email: usuario.email,
+      nombre: usuario.nombre,
+      token: usuario.token,
+    });
     res.json({
       msg: "Usuario creado correctamente, revisa tu email para confirmar tu cuenta 😉",
     });
@@ -135,7 +143,12 @@ const recuperarPasswordUsuario = async (req, res) => {
     usuario.token = generarId();
     // Actualizamos el usuario en la DB
     await usuario.save();
-
+    // Enviamos datos a la funcion que genera el email de recuperar contraseña
+    emailRecuperarContraseña({
+      email: usuario.email,
+      nombre: usuario.nombre,
+      token: usuario.token,
+    });
     res.json({
       msg: "Se ha enviado un email con el link para recuperar la contraseña 😉",
     });
